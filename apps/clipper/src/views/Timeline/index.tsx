@@ -32,7 +32,7 @@ const Timeline: FC = () => {
   return (
     <div className={styles.timeline}>
       {tracks.map(item => (
-        <div className={styles.track} key={item.id} style={{ width: maxDuration / zoom + 80 }}>
+        <div className={styles.track} key={item.id} style={{ minWidth: maxDuration / zoom + 80 }}>
           <div className={styles.type}>
             <MediaIcon />
           </div>
