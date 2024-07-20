@@ -1,0 +1,87 @@
+.player {
+  height: 100%;
+  padding: 16px 16px 4px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+
+  .title {
+    margin-bottom: 8px;
+  }
+  .scene {
+    position: relative;
+    flex: 1 0;
+    width: 720px;
+    margin: 0 auto;
+    background-color: #000;
+
+    video {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+    }
+  }
+  .controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 720px;
+    height: 48px;
+    margin: 0 auto;
+
+    .time {
+      display: flex;
+      width: 200px;
+      font-size: 12px;
+      .currentTime {
+        color: var(--background-button);
+      }
+      .separator {
+        margin: 0 4px;
+      }
+    }
+    .playControl {
+      cursor: pointer;
+
+      &.disabled {
+        cursor: not-allowed;
+
+        .playIcon::after {
+          border-left-color: #333;
+        }
+        .pauseIcon::before,
+        .pauseIcon::after {
+          background: #333;
+        }
+      }
+
+      .playIcon::after {
+        content: '';
+        display: block;
+        width: 0;
+        height: 0;
+        border-top: 10px solid transparent;
+        border-bottom: 10px solid transparent;
+        border-left: 15px solid var(--color-primary);
+      }
+      .pauseIcon {
+        display: flex;
+        gap: 6px;
+
+        &::before,
+        &::after {
+          content: '';
+          display: block;
+          width: 5px;
+          height: 20px;
+          background: var(--color-primary);
+        }
+      }
+    }
+    .action {
+      width: 200px;
+    }
+  }
+}

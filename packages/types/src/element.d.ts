@@ -4,9 +4,13 @@ export interface IElement {
   type: string;
   /** 元素地址 */
   url: string;
+  /** 缩略图地址 */
+  thumbnail: string;
   /** 元素名称 */
   name: string;
 
+  /** 资源 id */
+  materialId: string;
   /** 资源原始宽度 */
   naturalWidth: number;
   /** 资源原始高度 */
@@ -23,7 +27,7 @@ export interface IElement {
   delay: number;
   /** 时长 */
   duration: number;
-  
+
   /** 媒体开始时间 */
   startTime: number;
   /** 媒体结束时间 */
