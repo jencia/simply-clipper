@@ -7,7 +7,7 @@ interface IElementState {
 }
 
 interface IElementAction {
-  setCurrentElement: (element: IElement) => void;
+  setCurrentElement: (element: IElement | null) => void;
   addElement: (element: IElement) => void;
   removeElement: (id: string) => void;
   updateElement: (id: string, element: Partial<IElement>) => void;

@@ -30,9 +30,16 @@ const Timeline: FC = () => {
   }
 
   return (
-    <div className={styles.timeline}>
+    <div className={styles.timeline} onClick={() => setCurrentElement(null)}>
       {tracks.map(item => (
-        <div className={styles.track} key={item.id} style={{ minWidth: maxDuration / zoom + 80 }}>
+        <div
+          key={item.id}
+          className={cx([
+            styles.track,
+            { [styles.active]: item.elementIds.includes(currentElement?.id ?? '') },
+          ])}
+          style={{ minWidth: maxDuration / zoom + 80 }}
+        >
           <div className={styles.type}>
             <MediaIcon />
           </div>
@@ -51,7 +58,10 @@ const Timeline: FC = () => {
                     width: el.duration / zoom,
                     backgroundImage: `url(${el.thumbnail})`,
                   }}
-                  onClick={() => setCurrentElement(el)}
+                  onClick={e => {
+                    e.stopPropagation();
+                    setCurrentElement(el);
+                  }}
                 >
                   <div className={styles.duration}>{formatTime(el.duration)}</div>
                   <div className={cx([styles.bar, styles.barLeft])} />
