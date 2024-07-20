@@ -3,9 +3,11 @@ import { create } from 'zustand';
 
 interface IElementState {
   list: IElement[];
+  current: IElement | null;
 }
 
 interface IElementAction {
+  setCurrentElement: (element: IElement) => void;
   addElement: (element: IElement) => void;
   removeElement: (id: string) => void;
   updateElement: (id: string, element: Partial<IElement>) => void;
@@ -13,6 +15,12 @@ interface IElementAction {
 
 export const useElementStore = create<IElementState & IElementAction>(set => ({
   list: [],
+  current: null,
+  setCurrentElement: element =>
+    set(state => ({
+      ...state,
+      current: element,
+    })),
   addElement: element =>
     set(state => ({
       ...state,
