@@ -38,9 +38,13 @@ const Timeline: FC = () => {
   }
 
   return (
-    <div className={styles.timeline} onClick={() => setCurrentElement(null)}>
+    <div className={styles.timeline}>
       {/* 上方空白区域 */}
-      <div className={styles.blank} onMouseEnter={() => handleMouseEnter(tracks.length - 0.5)} />
+      <div
+        className={styles.blank}
+        onMouseEnter={() => handleMouseEnter(tracks.length - 0.5)}
+        onClick={() => setCurrentElement(null)}
+      />
 
       {/* 轨道列表 */}
       {[...tracks].reverse().map((item, i, arr) => (
@@ -59,7 +63,11 @@ const Timeline: FC = () => {
       ))}
 
       {/* 下方空白区域 */}
-      <div className={styles.blank} onMouseEnter={() => handleMouseEnter(0)} />
+      <div
+        className={styles.blank}
+        onMouseEnter={() => handleMouseEnter(0)}
+        onClick={() => setCurrentElement(null)}
+      />
 
       {/* 游标 */}
       <div

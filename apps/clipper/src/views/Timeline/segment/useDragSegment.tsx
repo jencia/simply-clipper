@@ -69,7 +69,8 @@ export function useDragSegment() {
       setDragData({ element, x: dx, y: dy, delay: finalDelay });
     };
     const onMouseUp = () => {
-      applyChange(element, finalDelay);
+      updateElement(element.id, { delay: finalDelay });
+      applyTrackChange(element);
       setDragging(false);
       setDragData(null);
 
@@ -80,16 +81,53 @@ export function useDragSegment() {
     window.addEventListener('mouseup', onMouseUp);
   }
 
-  // 应用变更信息
-  function applyChange(element: IElement, delay: number) {
-    updateElement(element.id, { delay });
+  // 拖拽左右手柄
+  function dragBar(
+    element: IElement,
+    isLeft: boolean,
+    downEvent: React.MouseEvent<HTMLDivElement>
+  ) {
+    downEvent.stopPropagation();
+    const sx = downEvent.clientX;
+    const originDelay = element.delay;
+    const originDuration = element.duration;
+    const originStartTime = element.startTime;
 
+    const onMouseMove = (moveEvent: MouseEvent) => {
+      const dx = moveEvent.clientX - sx;
+      const options: Partial<IElement> = {};
+
+      if (isLeft) {
+        const offset = Math.max(originStartTime + dx * zoom, 0) - originStartTime;
+
+        options.delay = originDelay + offset;
+        options.startTime = originStartTime + offset;
+        options.duration = originDuration - offset;
+      } else {
+        options.duration = Math.max(
+          100,
+          Math.min(originDuration + dx * zoom, element.naturalDuration)
+        );
+      }
+
+      updateElement(element.id, options);
+    };
+    const onMouseUp = () => {
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mouseup', onMouseUp);
+    };
+    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mouseup', onMouseUp);
+  }
+
+  // 应用变更信息
+  function applyTrackChange(element: IElement) {
     const { hoverTrackIdx } = useDraggerStore.getState();
     const newTrackIdx = Math.floor(hoverTrackIdx);
     const oldTrack = tracks[oldTrackIdx.current];
 
-    // 在原轨道上下插入都相当于同轨道
-    if ([newTrackIdx, newTrackIdx + 0.5, newTrackIdx - 0.5].includes(oldTrackIdx.current)) {
+    // 同轨道移动不做处理
+    if (oldTrackIdx.current === hoverTrackIdx) {
       return;
     }
 
@@ -109,5 +147,5 @@ export function useDragSegment() {
     }
   }
 
-  return { dragSegment };
+  return { dragSegment, dragBar };
 }

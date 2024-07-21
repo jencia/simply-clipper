@@ -21,7 +21,7 @@ export default function Segment({ element }: { element: IElement }) {
   const x = element.delay / zoom + (dragging ? dragData.x : 0);
   const y = dragging ? dragData.y : 0;
 
-  const { dragSegment } = useDragSegment();
+  const { dragSegment, dragBar } = useDragSegment();
 
   return (
     <div
@@ -40,9 +40,15 @@ export default function Segment({ element }: { element: IElement }) {
       {/* 时长 */}
       <div className={styles.duration}>{formatTime(element.duration)}</div>
       {/* 左手柄 */}
-      <div className={cx([styles.bar, styles.barLeft])} />
+      <div
+        className={cx([styles.bar, styles.barLeft])}
+        onMouseDown={e => dragBar(element, true, e)}
+      />
       {/* 右手柄 */}
-      <div className={cx([styles.bar, styles.barRight])} />
+      <div
+        className={cx([styles.bar, styles.barRight])}
+        onMouseDown={e => dragBar(element, false, e)}
+      />
     </div>
   );
 }
