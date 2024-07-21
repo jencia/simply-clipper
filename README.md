@@ -42,7 +42,7 @@
 
 ## 界面演示
 
-![alt text](image.png)
+![alt text](./demo.png)
 
 ## 遗留问题
 
