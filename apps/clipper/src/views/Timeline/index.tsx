@@ -14,9 +14,25 @@ import Tracker from './Tracker';
 const Timeline: FC = () => {
   const zoom = useViewportStore(state => state.zoom);
   const tracks = useTrackStore(state => state.list);
-  const currentTime = usePlayerStore(state => state.currentTime);
+  const { currentTime, setCurrentTime } = usePlayerStore();
   const { setCurrentElement } = useElementStore();
   const { dragging, hoverTrackIdx, setHoverTrackIdx } = useDraggerStore();
+
+  function dragCursor(downEvent: React.MouseEvent<HTMLDivElement>) {
+    const sx = downEvent.clientX;
+    const originTime = currentTime;
+
+    const onMouseMove = (moveEvent: MouseEvent) => {
+      const dx = moveEvent.clientX - sx;
+      setCurrentTime(Math.max(originTime + dx * zoom, 0));
+    };
+    const onMouseUp = () => {
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mouseup', onMouseUp);
+    };
+    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mouseup', onMouseUp);
+  }
 
   // 空轨道
   if (tracks.length === 0) {
@@ -73,6 +89,7 @@ const Timeline: FC = () => {
       <div
         className={styles.playCursor}
         style={{ transform: `translateX(${currentTime / zoom}px)` }}
+        onMouseDown={dragCursor}
       >
         <div className={styles.playCursorBar} />
       </div>
