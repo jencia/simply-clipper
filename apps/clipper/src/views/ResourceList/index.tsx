@@ -2,13 +2,12 @@ import { FC } from 'react';
 import styles from './style.module.less';
 import { IMaterial, materials } from './mock';
 import { formatTime } from '../../utils/transform';
-import { useElementStore, usePlayerStore, useTrackStore } from '@app/store';
+import { useElementStore, useTrackStore } from '@app/store';
 import { v4 as uuidV4 } from 'uuid';
 
 const ResourceList: FC = () => {
   const { addElement } = useElementStore();
-  const { addTrack, pushElementId, list: tracks } = useTrackStore();
-  const { currentTime } = usePlayerStore();
+  const { addTrack } = useTrackStore();
 
   function handleAdd(data: IMaterial) {
     const elId = uuidV4();
@@ -30,15 +29,11 @@ const ResourceList: FC = () => {
       thumbnail: data.thumbnail,
     });
 
-    // if (!tracks[0]) {
     addTrack({
       id: uuidV4(),
       elementIds: [elId],
       type: 'video',
     });
-    // } else {
-    //   pushElementId(tracks[0].id, elId);
-    // }
   }
 
   return (
