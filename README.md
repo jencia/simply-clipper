@@ -1,27 +1,50 @@
-# Frontend Interview Project
+# 简易版剪辑
 
-Finish in 24 hours
+模仿剪映 Web 功能在一天之内完成一个基本的剪辑功能
 
-## Context
+## 技术栈
 
-You are going to build a timeline component of a video editor.
+- React
+- TypeScript
+- Zustand
+- ViteJS + Pnpm + Monorepo
 
-## Description
+## 项目结构
 
-<https://www.loom.com/share/fd8c5b5e034f406b865970e02f7d54fc>
+- apps 应用
+  - clipper 剪辑应用
+- packages
+  - store 全局状态
+  - types 剪辑数据结构定义
 
-## Requirements
+## 功能实现
 
-- Pure client side code, react ideally
-- Implement the UI of a timeline view in a video Editor like the screenshot above
-  - Use any mock images or videos you want.
-- Be able to drag the handle of each clip to shorten/extend the clip, to change it’s start/end
-- Be able to drag and drop the clip anywhere in the timeline
-  - Create track if drag & drop in the middle of two tracks
-  - (Even from outside of the timeline view)
+- [ ] 左侧栏
+  - [x] 资源加载与展示
+  - [x] 点击添加片段
+  - [ ] 拖拽添加片段
+- [ ] 播放器
+  - [x] 舞台渲染
+  - [x] 播放暂停
+  - [ ] 视口调节
+  - [ ] 元素拖拉拽
+  - [ ] 全屏
+- [ ] 时间轴
+  - [x] 片段与轨道展示
+  - [x] 片段时长调整
+  - [x] 片段跨轨道移动
+  - [x] 游标展示与交互
+  - [x] 删除
+  - [ ] 复制
+  - [ ] 裁切
+  - [ ] 刻度尺
+  - [ ] 轨道缩放
 
-## Deliverables
+## 界面演示
 
-- a public Github repo , and a readme file
-- plus if it’s hosted online
+![alt text](image.png)
+
+## 遗留问题
+
+- 时间轴的交互还有很多边界场景还没处理
 -
