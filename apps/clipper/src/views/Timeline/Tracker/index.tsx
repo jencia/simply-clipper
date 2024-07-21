@@ -4,6 +4,7 @@ import cx from 'classnames';
 import MediaIcon from '../../../components/MediaIcon';
 import Segment from '../segment';
 import styles from './style.module.less';
+import { throttle } from 'lodash-es';
 
 export default function Tracker({ track, index }: { track: ITrack; index: number }) {
   const elements = useElementStore(state => state.list);
@@ -14,6 +15,7 @@ export default function Tracker({ track, index }: { track: ITrack; index: number
   const zoom = useViewportStore(state => state.zoom);
   const filteredElements = elements.filter(el => track.elementIds.includes(el.id));
   const { dragData, hoverTrackIdx, setHoverTrackIdx } = useDraggerStore();
+  const delaySetTrackId = throttle(index => setHoverTrackIdx(index), 300);
 
   // 激活态，当前轨道存在选中元素 || 拖拽处在当前轨道
   const active = track.elementIds.includes(currentElement?.id ?? '') || hoverTrackIdx === index;
@@ -22,7 +24,7 @@ export default function Tracker({ track, index }: { track: ITrack; index: number
     <div
       className={cx([styles.track, { [styles.active]: active }])}
       style={{ minWidth: maxDuration / zoom + 80 }}
-      onMouseEnter={() => setHoverTrackIdx(index)}
+      onMouseMove={() => delaySetTrackId(index)}
     >
       {/* 轨道左侧图标 */}
       <div className={styles.type}>
