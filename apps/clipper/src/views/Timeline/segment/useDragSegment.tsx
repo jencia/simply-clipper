@@ -56,6 +56,7 @@ export function useDragSegment() {
       let newX = Math.max(originX + dx, 0);
 
       if (
+        currTrackIdx > -1 &&
         // 不存在小数位就是在旧轨道插入
         Math.floor(currTrackIdx) === currTrackIdx &&
         // 没有空间可以放得下片段
@@ -66,7 +67,7 @@ export function useDragSegment() {
 
       finalDelay = newX * zoom;
       setDragging(true);
-      setDragData({ element, x: dx, y: dy, delay: finalDelay });
+      setDragData({ element, x: dx, y: dy, delay: finalDelay, from: 'segment' });
     };
     const onMouseUp = () => {
       updateElement(element.id, { delay: finalDelay });

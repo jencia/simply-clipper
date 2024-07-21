@@ -3,8 +3,12 @@ import styles from './style.module.less';
 import ResourceList from '../ResourceList';
 import Player from '../Player';
 import Timeline from '../Timeline';
+import { useDraggerStore } from '@app/store';
+import Segment from '../Timeline/segment';
 
 const Layout: FC = () => {
+  const { dragData, isEnterTimeline } = useDraggerStore();
+
   return (
     <div className={styles.layout}>
       <div className={styles.header}>
@@ -25,6 +29,18 @@ const Layout: FC = () => {
           <Timeline />
         </div>
       </div>
+      {dragData &&
+        dragData.from === 'material' &&
+        (isEnterTimeline ? (
+          <Segment element={dragData.element} />
+        ) : (
+          <div
+            className={styles.dragBox}
+            style={{ transform: `translate(${dragData.x}px, ${dragData.y}px)` }}
+          >
+            <img src={dragData.element.thumbnail} />
+          </div>
+        ))}
     </div>
   );
 };

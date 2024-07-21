@@ -78,3 +78,28 @@
     box-sizing: border-box;
   }
 }
+
+.dragBox {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 130px;
+  height: 73px;
+  pointer-events: none;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border: 1px solid var(--background-button);
+    border-radius: 4px;
+  }
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+  }
+}
