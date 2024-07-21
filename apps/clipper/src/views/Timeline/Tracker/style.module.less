@@ -1,0 +1,43 @@
+// 轨道
+.track {
+  width: 100%;
+  height: 56px;
+  background: var(--background-track);
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+
+  &.active {
+    background-color: var(--background-track-active);
+  }
+  &:hover .placeholderElement {
+    opacity: 1;
+  }
+
+  // 轨道类型
+  .type {
+    width: 60px;
+    flex-shrink: 0;
+    padding-left: 16px;
+    box-sizing: border-box;
+    font-size: 16px;
+    color: #aaa;
+  }
+}
+
+// 片段
+.segments {
+  position: relative;
+  height: 100%;
+  flex: 1;
+}
+
+// 占位片段
+.placeholderElement {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+}

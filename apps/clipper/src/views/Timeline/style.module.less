@@ -1,3 +1,4 @@
+// 空轨道
 .emptyTrack {
   display: flex;
   justify-content: center;
@@ -24,9 +25,9 @@
   }
 }
 
+// 时间轴
 .timeline {
   position: relative;
-  padding: 16px 0;
   box-sizing: border-box;
   width: 100%;
   height: 100%;
@@ -35,97 +36,32 @@
   flex-direction: column;
   justify-content: center;
 
-  .track {
-    width: 100%;
-    height: 56px;
-    margin-top: 8px;
-    background: var(--background-track);
-    display: flex;
-    align-items: center;
-    flex-shrink: 0;
-
-    &.active {
-      background-color: var(--background-track-active);
-    }
-  }
-
-  .type {
-    width: 60px;
-    flex-shrink: 0;
-    padding-left: 16px;
-    box-sizing: border-box;
-    font-size: 16px;
-    color: #aaa;
-  }
-
-  .segments {
-    position: relative;
-    height: 100%;
+  .blank {
     flex: 1;
+    width: 100%;
   }
 
-  .segment {
-    position: absolute;
-    left: 0;
-    top: 0;
-    height: 56px;
-    background: repeat-x left center / contain;
-    border: 2px solid transparent;
-    border-radius: 2px;
+  .gap {
+    flex-shrink: 0;
+    height: 7px;
+    width: 100%;
+    padding: 3px 0;
     box-sizing: border-box;
-    user-select: none;
-
-    &.active {
-      border-color: #fff;
-      .duration,
-      .bar {
-        opacity: 1;
-      }
+    opacity: 0;
+    &::after {
+      content: '';
+      display: block;
+      width: 100%;
+      height: 1px;
+      background: var(--background-button);
     }
-
-    .duration {
-      position: absolute;
-      right: 8px;
-      top: 4px;
-      padding: 4px 8px;
-      background: rgba(0, 0, 0, 0.7);
-      border-radius: 6px;
-      opacity: 0;
-    }
-
-    .bar {
-      position: absolute;
-      top: -2px;
-      width: 10px;
-      height: 56px;
-      background-color: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: ew-resize;
-      opacity: 0;
-
-      &::after {
-        content: '';
-        display: block;
-        width: 2px;
-        height: 12px;
-        background: var(--background-secondary);
-      }
-
-      &Left {
-        left: -10px;
-        border-top-left-radius: 4px;
-        border-bottom-left-radius: 4px;
-      }
-      &Right {
-        right: -10px;
-        border-top-right-radius: 4px;
-        border-bottom-right-radius: 4px;
-      }
+    &.dragging {
+      opacity: 1;
     }
   }
 }
+
+// 游标
 .playCursor {
   position: absolute;
   left: 55px;
@@ -134,11 +70,13 @@
   height: 100%;
   cursor: ew-resize;
 
+  // 手柄
   &Bar {
     position: absolute;
     left: 0;
     top: 0;
 
+    // 手柄矩形部分
     &::before {
       content: '';
       display: block;
@@ -146,6 +84,7 @@
       height: 12px;
       background: #fff;
     }
+    // 手柄三角形部分
     &::after {
       content: '';
       display: block;

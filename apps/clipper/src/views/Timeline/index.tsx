@@ -1,21 +1,24 @@
 import { FC } from 'react';
 import styles from './style.module.less';
-import { useElementStore, usePlayerStore, useTrackStore } from '@app/store';
+import {
+  useDraggerStore,
+  useElementStore,
+  usePlayerStore,
+  useTrackStore,
+  useViewportStore,
+} from '@app/store';
 import cx from 'classnames';
-import { formatTime } from '../../utils/transform';
 import MediaIcon from '../../components//MediaIcon';
-
-// 目前缩放比例先写死
-const zoom = 15;
+import Tracker from './Tracker';
 
 const Timeline: FC = () => {
+  const zoom = useViewportStore(state => state.zoom);
   const tracks = useTrackStore(state => state.list);
   const currentTime = usePlayerStore(state => state.currentTime);
-  const { list: elements, current: currentElement, setCurrentElement } = useElementStore();
-  const maxDuration = useElementStore(state =>
-    state.list.reduce((prev, curr) => Math.max(prev, curr.delay + curr.duration), 0)
-  );
+  const { setCurrentElement } = useElementStore();
+  const { dragging, hoverTrackIdx, setHoverTrackIdx } = useDraggerStore();
 
+  // 空轨道
   if (tracks.length === 0) {
     return (
       <div className={styles.emptyTrack}>
@@ -29,48 +32,36 @@ const Timeline: FC = () => {
     );
   }
 
+  // 鼠标移入
+  function handleMouseEnter(index: number) {
+    dragging && setHoverTrackIdx(index);
+  }
+
   return (
     <div className={styles.timeline} onClick={() => setCurrentElement(null)}>
-      {tracks.map(item => (
-        <div
-          key={item.id}
-          className={cx([
-            styles.track,
-            { [styles.active]: item.elementIds.includes(currentElement?.id ?? '') },
-          ])}
-          style={{ minWidth: maxDuration / zoom + 80 }}
-        >
-          <div className={styles.type}>
-            <MediaIcon />
-          </div>
-          <div className={styles.segments}>
-            {elements
-              .filter(el => item.elementIds.includes(el.id))
-              .map(el => (
-                <div
-                  key={el.id}
-                  className={cx([
-                    styles.segment,
-                    { [styles.active]: el.id === currentElement?.id },
-                  ])}
-                  style={{
-                    transform: `translateX(${el.delay / zoom}px)`,
-                    width: el.duration / zoom,
-                    backgroundImage: `url(${el.thumbnail})`,
-                  }}
-                  onClick={e => {
-                    e.stopPropagation();
-                    setCurrentElement(el);
-                  }}
-                >
-                  <div className={styles.duration}>{formatTime(el.duration)}</div>
-                  <div className={cx([styles.bar, styles.barLeft])} />
-                  <div className={cx([styles.bar, styles.barRight])} />
-                </div>
-              ))}
-          </div>
+      {/* 上方空白区域 */}
+      <div className={styles.blank} onMouseEnter={() => handleMouseEnter(tracks.length - 0.5)} />
+
+      {/* 轨道列表 */}
+      {[...tracks].reverse().map((item, i, arr) => (
+        <div key={item.id}>
+          <div
+            className={cx([
+              styles.gap,
+              { [styles.dragging]: hoverTrackIdx === arr.length - i - 0.5 },
+            ])}
+            onMouseEnter={() => {
+              handleMouseEnter(arr.length - i - 0.5);
+            }}
+          />
+          <Tracker track={item} index={arr.length - i - 1} />
         </div>
       ))}
+
+      {/* 下方空白区域 */}
+      <div className={styles.blank} onMouseEnter={() => handleMouseEnter(0)} />
+
+      {/* 游标 */}
       <div
         className={styles.playCursor}
         style={{ transform: `translateX(${currentTime / zoom}px)` }}

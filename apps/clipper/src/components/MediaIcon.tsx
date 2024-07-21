@@ -11,7 +11,7 @@ export default function () {
     >
       <g>
         <path
-          stroke-width="1.5"
+          strokeWidth="1.5"
           d="M1.75 2.75h12.5v10.5H1.75z"
           data-follow-stroke="currentColor"
           stroke="currentColor"

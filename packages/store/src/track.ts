@@ -6,7 +6,7 @@ interface ITrackState {
 }
 
 interface ITrackAction {
-  addTrack: (track: ITrack) => void;
+  addTrack: (track: ITrack, idx?: number) => void;
   removeTrack: (id: string) => void;
   updateTrack: (id: string, track: Partial<ITrack>) => void;
   pushElementId: (trackId: string, elementId: string) => void;
@@ -14,11 +14,16 @@ interface ITrackAction {
 
 export const useTrackStore = create<ITrackState & ITrackAction>(set => ({
   list: [],
-  addTrack: track =>
-    set(state => ({
-      ...state,
-      list: [...state.list, track],
-    })),
+  addTrack: (track, idx) =>
+    set(state => {
+      const list = [...state.list];
+      if (idx === undefined) {
+        list.push(track);
+      } else {
+        list.splice(idx, 0, track);
+      }
+      return { ...state, list };
+    }),
   removeTrack: id =>
     set(state => ({
       ...state,
