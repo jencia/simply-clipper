@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import styles from './style.module.less';
 import {
   useDraggerStore,
@@ -13,9 +13,9 @@ import Tracker from './Tracker';
 
 const Timeline: FC = () => {
   const zoom = useViewportStore(state => state.zoom);
-  const tracks = useTrackStore(state => state.list);
+  const { list: tracks, removeTrack } = useTrackStore();
   const { currentTime, setCurrentTime } = usePlayerStore();
-  const { setCurrentElement } = useElementStore();
+  const { setCurrentElement, removeElement } = useElementStore();
   const { dragging, hoverTrackIdx, setHoverTrackIdx } = useDraggerStore();
 
   function dragCursor(downEvent: React.MouseEvent<HTMLDivElement>) {
@@ -34,6 +34,33 @@ const Timeline: FC = () => {
     window.addEventListener('mouseup', onMouseUp);
   }
 
+  // 鼠标移入
+  function handleMouseEnter(index: number) {
+    dragging && setHoverTrackIdx(index);
+  }
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const { current: currentElement } = useElementStore.getState();
+      const { list: trackList } = useTrackStore.getState();
+      if (!currentElement || e.key !== 'Delete') return;
+
+      trackList.forEach(track => {
+        track.elementIds = track.elementIds.filter(id => currentElement.id !== id);
+        if (track.elementIds.length === 0) {
+          removeTrack(track.id);
+        }
+      });
+      removeElement(currentElement.id);
+      setCurrentElement(null);
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
   // 空轨道
   if (tracks.length === 0) {
     return (
@@ -47,12 +74,6 @@ const Timeline: FC = () => {
       </div>
     );
   }
-
-  // 鼠标移入
-  function handleMouseEnter(index: number) {
-    dragging && setHoverTrackIdx(index);
-  }
-
   return (
     <div className={styles.timeline}>
       {/* 上方空白区域 */}
